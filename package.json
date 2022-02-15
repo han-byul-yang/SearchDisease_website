@@ -2,6 +2,7 @@
   "name": "check_disease",
   "version": "0.1.0",
   "private": true,
+  "proxy": "https://ko.wikipedia.org/w/api.php",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.2",
@@ -10,11 +11,19 @@
     "@types/node": "^16.11.24",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
+    "buffer": "^6.0.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-hook-form": "^7.27.0",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "5.0.0",
+    "recoil": "^0.6.1",
+    "styled-components": "^5.3.3",
+    "sweetalert2": "^11.4.0",
     "typescript": "^4.5.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "wikijs": "^6.3.3",
+    "wikipediajs": "^1.4.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -39,5 +48,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/react-router-dom": "^5.3.3",
+    "@types/styled-components": "^5.1.22"
   }
 }
