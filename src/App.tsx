@@ -1,6 +1,7 @@
 import Router from "./components/Router";
 import {createGlobalStyle} from 'styled-components'
-import { RecoilRoot } from "recoil";
+import React from "react";
+import './App.css'
 
 const Global = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300&display=swap');
@@ -40,7 +41,10 @@ body {
   line-height: 1;
   font-family: 'Source Sans Pro', sans-serif;
   color: #e9e2d0;
-  background-color: #97483e;
+  height: auto;
+  background-image: url('../searchbg.jpg');
+  backdrop-filter: blur(10px);
+  background-size : cover;
 }
 a{
   text-decoration: none;
@@ -66,12 +70,10 @@ table {
 
 function App() {
   return (
-    <RecoilRoot>
     <div className="App">
       <Router />
       <Global />
     </div>
-    </RecoilRoot>
   );
 }
 

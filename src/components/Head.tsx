@@ -1,10 +1,12 @@
+import React from "react"
 import styled from "styled-components"
 
 const Title = styled.header`
 color: #e9e2d0;
+font-family: 'CookieRun-Regular';
 font-size: 50px;
 text-align: center;
-margin-top: 5vh;
+padding-top: 5vh;
 `
 
 function Top (){

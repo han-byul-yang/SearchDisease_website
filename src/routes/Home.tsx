@@ -1,19 +1,20 @@
-import { useEffect, useState } from 'react'
-import {useForm} from 'react-hook-form'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 import Top from '../components/Head'
-import { newwords3, newwords4 } from '../data/Symptomdic'
-import {DeleteAlert} from '../Modal'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { modalAtom, symptomAtom } from '../components/Atom'
+import { newwords4 } from '../data/SymptomDic'
+import { useRecoilState } from 'recoil'
+import { symptomAtom } from '../components/Atom'
 import Swal from 'sweetalert2'
-import Wikipedia from '../Api'
+import React from 'react'
+import { withRouter } from 'react-router-dom'
+
 
 const Body = styled.div`
 display: flex;
 flex-direction: column;
 position: relative;
-` 
+`
 
 const Notice = styled.div`
 margin-bottom: 1vh;
@@ -63,7 +64,7 @@ margin-top: 70vh;
 z-index: -1;
 `
 
-const Droplist = styled.div`
+const DropDownList = styled.div`
 width: 84vh;
 overflow: auto;`
 
@@ -73,42 +74,34 @@ height: 4vh;
 background: black;`
 
 interface Symptom {
-    search : string,
+    inputSymtoms: string,
 }
-interface List {
-    data : string,
-}
+function Home({history}) {
+    const { register, handleSubmit, setError, setValue } = useForm<Symptom>();
+    const [symptomList, setSymptomList] = useRecoilState<string[]>(symptomAtom)
+    const [dropDownWords, setDropDownWords] = useState<string[]>([])
 
-function Home (){
-    const { register, watch, handleSubmit, formState, setError, setValue} = useForm<Symptom>();
-    const [symptoms, setSymptoms] = useRecoilState<string[]>(symptomAtom)
-    const [dropword, setDropWord] = useState<string[]>([])
-
-    useEffect(()=>{
-        Wikipedia()
-    })
-
-    const Searchfunc = ({search} : Symptom) => {
-        setValue('search', '')
-        setDropWord([])
-        if (symptoms.indexOf(search) !== -1){
-            setError('search', {message: '이미 입력된 증상입니다.'}) //여기서 에러 메시지 띄우기
+    const submitSymptom = ({ inputSymtoms }: Symptom) => {
+        if (symptomList.indexOf(inputSymtoms) !== -1) {
+            setError('inputSymtoms', { message: '이미 입력된 증상입니다.' }) //여기서 에러 메시지 띄우기
         } else {
-        setSymptoms((old) => [search, ...old])
+            setSymptomList((oldSymptoms) => [inputSymtoms, ...oldSymptoms])
         }
+        setDropDownWords([]) //함수 이름에 맞는 분리 여부
+        setValue('inputSymtoms', '') //함수 이름에 맞는 분리 여부
     }
 
-    const chooseWord = (word : string) => {
-        if (symptoms.indexOf(word) !== -1){
-            setError('search', {message: '이미 입력된 증상입니다.'})
+    const chooseSymptom = (dropDownWord: string) => {
+        if (symptomList.indexOf(dropDownWord) !== -1) {
+            setError('inputSymtoms', { message: '이미 입력된 증상입니다.' }) //여기서 에러 메시지 띄우기
         } else {
-        setSymptoms((old) => [word, ...old])
+            setSymptomList((oldSymptoms) => [dropDownWord, ...oldSymptoms])
         }
-        setDropWord([])
-        setValue('search', '')
+        setDropDownWords([]) //함수 이름에 맞는 분리 여부
+        setValue('inputSymtoms', '') //함수 이름에 맞는 분리 여부
     }
 
-    const onRemove = (symptom: string) => {
+    const onRemove = (removeSymptom: string) => {
         Swal.fire({
             title: '이 증상을 삭제하시겠습니까?',
             text: "You won't be able to revert this!",
@@ -118,41 +111,45 @@ function Home (){
             cancelButtonColor: '#d33',
             confirmButtonText: '삭제!',
             cancelButtonText: '취소'
-          }).then((result) => {
+        }).then((result) => {
             if (result.isConfirmed) {
-                setSymptoms(()=> symptoms.filter((symps) => symps !== symptom))   
-            } 
-          })
+                setSymptomList(() => symptomList.filter((symptom) => symptom !== removeSymptom))
+            }
+        })
     }
 
-    const change = (e: any) => { //any 대신
-        const curwords = newwords4.filter((word) => (word.includes(e.target.value)))
-        if (e.target.value === ''){
-            setDropWord([])
+    const showDropDown = (e: any) => { //any 대신
+        const currentWords = newwords4.filter((word) => (word.includes(e.target.value)))
+        if (e.target.value === '') {
+            setDropDownWords([])
         } else {
-        setDropWord(curwords)
+            setDropDownWords(currentWords)
         }
     }
- 
+
+    const toResultPage = () => {
+        history.push('/result')
+    }
+
     return (
         <>
-        <Top />
-        <Body>
-        <SearchBox onSubmit={handleSubmit(Searchfunc)}>
-            <Notice>*증상을 많이 입력할 수록 정확한 결과가 나옵니다. </Notice>
-            <Search {...register('search', {required: '증상을 입력해주세요', onChange: (e) => change(e)})} type="text" placeholder='현재 나의 증상은?'></Search>
-                <Droplist>
-                    {dropword.map((word, idx) => <Ops key={idx} onClick={() => chooseWord(word)}>{word}</Ops>)}
-                </Droplist>
-            <Button onClick={handleSubmit(Searchfunc)}>+</Button> 
-            <Symptoms>
-                {symptoms.map((symptom) => <Box key={symptom} onClick={()=> onRemove(symptom)}>{symptom}</Box>)}
-            </Symptoms>
-        </SearchBox>
-        <SeeResult>결과 보기</SeeResult>
-        </Body>
+            <Body>
+            <Top />
+                <SearchBox onSubmit={handleSubmit(submitSymptom)}>
+                    <Notice>*증상을 많이 입력할 수록 정확한 결과가 나옵니다. </Notice>
+                    <Search {...register('inputSymtoms', { required: '증상을 입력해주세요', onChange: (e) => showDropDown(e) })} type="text" placeholder='현재 나의 증상은?'></Search>
+                    <DropDownList>
+                        {dropDownWords.map((dropDownWord, idx) => <Ops key={idx} onClick={() => chooseSymptom(dropDownWord)}>{dropDownWord}</Ops>)}
+                    </DropDownList>
+                    <Button onClick={handleSubmit(submitSymptom)}>+</Button>
+                    <Symptoms>
+                        {symptomList.map((symptom) => <Box key={symptom} onClick={() => onRemove(symptom)}>{symptom}</Box>)}
+                    </Symptoms>
+                    <SeeResult onClick={toResultPage}>결과 보기</SeeResult>
+                </SearchBox>
+            </Body>
         </>
     )
 }
 
-export default Home
+export default withRouter(Home)
