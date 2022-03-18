@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react"
-import { Link, withRouter } from "react-router-dom"
+import { withRouter } from "react-router-dom"
 import axios from "axios"
 import { docIdAtom, symptomAtom, wikiDocsAtom } from '../components/Atom'
 import { useRecoilValue, useRecoilState, useSetRecoilState } from 'recoil'
