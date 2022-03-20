@@ -20,9 +20,9 @@ display: flex;
 flex-direction: column;
 margin: 0 auto;
 margin-top: 23px;
-width: 80vw;
+width: 77vw;
 min-height: 70vh;
-background: #f8f5f5;
+background: rgba(0,0,0,0.5);
 color: black;
 font-family: 'YanoljaYacheR';
 &::selection { color: white; background: red; }`
@@ -77,7 +77,10 @@ const Tag = styled.button`
 border: none;
 outline: none;
 margin-right: 1rem;
-padding: 0.3rem;`
+padding: 0.4rem;
+color: white;
+background: #002E3D;
+border-radius: 5px;`
 
 function SearchResult ({history}) {
     const [wikiDocs, setWikiDocs] = useRecoilState(wikiDocsAtom)

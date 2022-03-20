@@ -39,10 +39,10 @@ footer, header, hgroup, main, menu, nav, section {
 }
 body {
   line-height: 1;
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: 'OTWelcomeRA';
   color: #e9e2d0;
-  height: auto;
-  background-image: url('../searchbg.jpg');
+  height: 100vh;
+  background-image: url('../searchbg2.jpg');
   backdrop-filter: blur(10px);
   background-size : cover;
 }

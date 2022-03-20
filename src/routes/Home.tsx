@@ -8,6 +8,8 @@ import { symptomAtom } from '../components/Atom'
 import Swal from 'sweetalert2'
 import React from 'react'
 import { withRouter } from 'react-router-dom'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; 
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons"
 
 
 const Body = styled.div`
@@ -21,31 +23,34 @@ margin-bottom: 1vh;
 `
 
 const SearchBox = styled.form`
-margin: 28vh auto 0;
+margin: 26vh auto 0;
 position: relative;
+`
+
+const SearchForm = styled.div`
+position: relative;
+width: 86vh;
+height: 8.1vh;
 `
 
 const Search = styled.input`
+position: absolute;
 width: 85vh;
 height: 8vh;
-border-radius: 1em;
+background: rgba(0,0,0,0.3);
+border: none;
 margin-right: 1vh;
 `
 
-const Button = styled.button`
-width: 7vh;
-height: 7vh;`
+const MagnifyingGlassIcon = styled.div`
+position: absolute;
+transform: scale(2) ;
+right: 2rem;
+top: 1.3rem;`
 
-const Box = styled.li`
-position: relative;
-width: 12vh;
-height: 7vh;
-margin-right: 2.5vh;
-border-radius: 1.4rem;
-text-align: center;
-color: black;
-background: #e9e2d0;`
-
+const SymptomText = styled.div`
+margin-top: 1.4rem;
+`
 const Symptoms = styled.ul`
 position: relative;
 margin-top: 3vh;
@@ -53,29 +58,48 @@ display: flex;
 flex-direction: row;
 width: 90vh;`
 
+const Box = styled.li`
+position: relative;
+width: 13vh;
+height: 6.8vh;
+margin-right: 2.5vh;
+border-radius: 1.4rem;
+border: 2px solid white;
+text-align: center;
+padding-top: 15px;
+color: white;
+background: rgba(0,0,0,0);`
+
 const SeeResult = styled.button`
 display: inline-block;
 position: absolute;
-width: 30vh;
-height: 12vh;
+width: 37vh;
+height: 11vh;
 margin-left: 50%;
 transform: translateX(-50%);
-margin-top: 70vh;
-z-index: -1;
+margin-top: 8rem;
+background: #FBF7F7;
+color: #003D51;
+border: none;
+border-radius: 10px;
+font-size: 18px;
 `
 
 const DropDownList = styled.div`
-width: 84vh;
-overflow: auto;`
+position: absolute;
+width: 85vh;
+overflow: auto;
+z-index: 100;`
 
 const Ops = styled.div`
-width: 82vh;
+width: 85vh;
 height: 4vh;
 background: black;`
 
 interface Symptom {
     inputSymtoms: string,
 }
+
 function Home({history}) {
     const { register, handleSubmit, setError, setValue } = useForm<Symptom>();
     const [symptomList, setSymptomList] = useRecoilState<string[]>(symptomAtom)
@@ -137,11 +161,14 @@ function Home({history}) {
             <Top />
                 <SearchBox onSubmit={handleSubmit(submitSymptom)}>
                     <Notice>*증상을 많이 입력할 수록 정확한 결과가 나옵니다. </Notice>
+                    <SearchForm onSubmit={handleSubmit(submitSymptom)}>
                     <Search {...register('inputSymtoms', { required: '증상을 입력해주세요', onChange: (e) => showDropDown(e) })} type="text" placeholder='현재 나의 증상은?'></Search>
+                    <MagnifyingGlassIcon onClick={handleSubmit(submitSymptom)}><FontAwesomeIcon icon={faMagnifyingGlass} /></MagnifyingGlassIcon>
+                    </SearchForm>
                     <DropDownList>
                         {dropDownWords.map((dropDownWord, idx) => <Ops key={idx} onClick={() => chooseSymptom(dropDownWord)}>{dropDownWord}</Ops>)}
                     </DropDownList>
-                    <Button onClick={handleSubmit(submitSymptom)}>+</Button>
+                    <SymptomText>나는 지금 ...</SymptomText>
                     <Symptoms>
                         {symptomList.map((symptom) => <Box key={symptom} onClick={() => onRemove(symptom)}>{symptom}</Box>)}
                     </Symptoms>
