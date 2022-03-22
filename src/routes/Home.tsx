@@ -83,6 +83,7 @@ color: #003D51;
 border: none;
 border-radius: 10px;
 font-size: 18px;
+font-family: 'OTWelcomeRA';
 `
 
 const DropDownList = styled.div`
