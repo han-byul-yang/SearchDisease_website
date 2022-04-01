@@ -41,12 +41,17 @@ color: black;`
 const Title = styled.div``
 
 const Description = styled.div``
-
-const Text = styled.div``
+interface Container {
+    num : number;
+}
+const Text = styled.div<Container>`
+padding-top: ${(props) => (props.num % 2 === 0 ? '10px' : '30px')};
+font-size: ${(props) => (props.num % 2 === 0 ? '15px' : '20px')};
+color: ${(props) => (props.num % 2 === 0 ? 'black' : '#4598C7')};`
 
 function DetailPage () {
     const docId = useRecoilValue(docIdAtom)
-    const [docText, setDocText] = useState([])
+    const [docText, setDocText] = useState('')
 
     const searchWikiDocs = async () => {
         await axios.get(`/w/api.php?pageids=${docId}&prop=pageimages%7Ccirrusdoc&piprop=original%7Cname`
@@ -57,14 +62,18 @@ function DetailPage () {
                     , converttitles: 1
                     , utf8: 1
                 }
-            }).then((response) => {setDocText(response.data.query.pages[`${docId}`].cirrusdoc[0].source.source_text.split('==')); //split을 따로 빼야하나 고민 
+            }).then((response) => {setDocText(response.data.query.pages[`${docId}`].cirrusdoc[0].source.source_text); //split을 따로 빼야하나 고민 
 })
     }
 
     useEffect(() => {
         searchWikiDocs()
     }, [])
-
+    useEffect(() => {
+        if (docText !== ''){
+        console.log(docText.replace(/<ref>.{1,}\<\/ref\>/g, ''))
+    }
+    }, [docText])
 
     return <Body>
         <Top />
@@ -75,7 +84,8 @@ function DetailPage () {
         <Form>
             <Title></Title>
             <Description>
-                {docText.map((txt)=> <Text>{txt}</Text>)}
+                {/* {docText.map((txt, idx)=> <Text key={txt} num={idx}>{txt}</Text>)} */}
+                {docText.replace(/<ref>.{1,}\<\/ref\>/g, '')}
             </Description>
         </Form>
     </Body>
