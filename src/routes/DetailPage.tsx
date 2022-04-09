@@ -4,6 +4,7 @@ import { docIdAtom } from '../components/Atom'
 import axios from 'axios'
 import styled from "styled-components";
 import Top from "../components/Head";
+import { withRouter } from "react-router-dom";
 
 const Body = styled.div`
 display: flex;
@@ -61,7 +62,7 @@ width: 23px;
 height: 27px;
 position: absolute;`
 
-function DetailPage(): JSX.Element {
+function DetailPage({history}): JSX.Element {
     const docId = useRecoilValue(docIdAtom)
     const [docText, setDocText] = useState('')
 
@@ -91,7 +92,7 @@ function DetailPage(): JSX.Element {
     return <Body>
         <Top />
         <Button>
-            <SearchHospital>병원 찾기</SearchHospital>
+            <SearchHospital onClick={() => history.push('/map')}>병원 찾기</SearchHospital>
             <GoCommunity>커뮤니티</GoCommunity>
         </Button>
         <Form>
@@ -105,4 +106,4 @@ function DetailPage(): JSX.Element {
     </Body>
 }
 
-export default DetailPage
+export default withRouter(DetailPage)
